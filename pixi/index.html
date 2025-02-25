@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ImagePRO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <header>
+        <h1 onclick="showTool('image')" style="cursor: pointer;">ImagePRO</h1>
+        <div class="menu-icon" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
+        <nav id="sliding-menu" class="sliding-menu">
+            <div class="close-btn" onclick="closeMenu()">
+                <i class="fas fa-times"></i>
+            </div>
+            <ul>
+                <li><a href="#" onclick="showTool('image')" class="menu-item" data-section="image">Home</a></li>
+                <li><a href="#" onclick="showTool('about')" class="menu-item" data-section="about">About</a></li>
+                <li><a href="#" onclick="showTool('contact')" class="menu-item" data-section="contact">Contact</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- Image Converter Tool -->
+        <section id="imageTool" class="tool">
+            <h2 class="tool-title"><span id="converter-title">Select Conversion Format</span></h2>
+            <div class="converter-area">
+                <div class="options-side left-options">
+                    <a href="#" class="option" onclick="highlightTile(this, 'PNG to JPEG')">PNG to JPEG</a>
+                    <a href="#" class="option" onclick="highlightTile(this, 'JPEG to PNG')">JPEG to PNG</a>
+                    <a href="#" class="option" onclick="highlightTile(this, 'WEBP to JPEG')">WEBP to JPEG</a>
+                    <a href="#" class="option" onclick="highlightTile(this, 'JPEG to WEBP')">JPEG to WEBP</a>
+                    <a href="#" class="option" onclick="highlightTile(this, 'WEBP to PNG')">WEBP to PNG</a>
+                    <a href="#" class="option" onclick="highlightTile(this, 'PNG to BMP')">PNG to BMP</a>
+                    <a href="#" class="option" onclick="highlightTile(this, 'BMP to PNG')">BMP to PNG</a>
+                    <a href="#" class="option" onclick="highlightTile(this, 'GIF to JPEG')">GIF to JPEG</a>
+                    <a href="#" class="option" onclick="highlightTile(this, 'TIFF to JPEG')">TIFF to JPEG</a>
+                    <a href="#" class="option" onclick="highlightTile(this, 'SVG to PNG')">SVG to PNG</a>
+                    <a href="#" class="option" onclick="highlightTile(this, 'HEIF to JPEG')">HEIF to JPEG</a>
+                </div>
+                <div class="work-area" onclick="openFileExplorer('image')" id="imageWorkArea">
+                    <div id="drop-area">
+                        <span id="drop-text">Drag & Drop Files Here or Click to Select</span>
+                        <img id="preview-image" src="#" alt="Preview" style="display: none;">
+                    </div>
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;"
+                        onchange="previewImage(event)">
+                    <div id="file-info">
+                        <div id="file-type"></div>
+                        <div id="file-size"></div>
+                    </div>
+                </div>
+                <div class="options-side right-options">
+                    <a href="#" class="option" onclick="highlightTile(this, 'JPEG to PNG')">JPEG to PNG</a>
+                    <a href="#" class="option" onclick="highlightTile(this, 'PNG to JPEG')">PNG to JPEG</a>
+                    <a href="#" class="option" onclick="highlightTile(this, 'JPEG to WEBP')">JPEG to WEBP</a>
+                    <a href="#" class="option" onclick="highlightTile(this, 'WEBP to JPEG')">WEBP to JPEG</a>
+                    <a href="#" class="option" onclick="highlightTile(this, 'PNG to WEBP')">PNG to WEBP</a>
+                    <a href="#" class="option" onclick="highlightTile(this, 'BMP to PNG')">BMP to PNG</a>
+                    <a href="#" class="option" onclick="highlightTile(this, 'PNG to BMP')">PNG to BMP</a>
+                    <a href="#" class="option" onclick="highlightTile(this, 'JPEG to GIF')">JPEG to GIF</a>
+                    <a href="#" class="option" onclick="highlightTile(this, 'JPEG to TIFF')">JPEG to TIFF</a>
+                    <a href="#" class="option" onclick="highlightTile(this, 'PNG to SVG')">PNG to SVG</a>
+                    <a href="#" class="option" onclick="highlightTile(this, 'JPEG to HEIF')">JPEG to HEIF</a>
+                </div>
+            </div>
+            <div id="progress-container">
+                <div id="progress-bar"></div>
+            </div>
+            <div class="button-container">
+                <button id="convertBtn" onclick="convertFile()" style="display: none;">Convert</button>
+                <button id="convertToPdfBtn" onclick="convertToPdf()" style="display: none;">Convert to
+                    PDF</button>
+                <button id="downloadBtn" onclick="simulateDownload()" style="display: none;">Download</button>
+                <button id="resetBtn" onclick="resetConverter()" style="display: none;">Reset</button>
+            </div>
+        </section>
+
+        <!-- Image Editor Tool -->
+        <section id="editorTool" class="tool" style="display: none;">
+            <h2>Image Editor</h2>
+            <div class="work-area" id="editorWorkArea">
+                <div id="editor-drop-area" onclick="openFileExplorer('editor')">
+                    <span id="editor-drop-text">Drag & Drop Image Here or Click to Select</span>
+                    <div id="editor-preview-container" style="display:none;">
+                        <canvas id="editor-canvas"></canvas>
+                    </div>
+                </div>
+                <input type="file" id="editorFileInput" accept="image/*" onchange="loadImageForEdit(event)"
+                    style="display: none;">
+                <div id="editor-file-info"></div>
+            </div>
+
+            <!-- Editor Control Panels -->
+            <div id="brightness-contrast-controls" class="editor-control-panel" style="display: none;">
+                <h3>Brightness & Contrast</h3>
+                <div class="slider-container">
+                    <label for="brightness">Brightness:</label>
+                    <input type="range" id="brightness" min="-100" max="100" value="0" oninput="applyFilter()">
+                    <span>
+                        <div id="rotate-controls" class="editor-control-panel" style="display: none;">
+                            <h3>Rotate</h3>
+                            <p>Rotate image by 90 degrees.</p>
+                        </div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button id="saveBtn" onclick="saveImage()" style="display: none;">Save Image</button>
+                <button id="editNextBtn" onclick="showTool('image')" style="display: none;">Done Editing</button>
+            </div>
+            <div class="tiles">
+                <button class="tile active" onclick="selectEditTool(this, 'brightness')">Brightness/Contrast</button>
+                <button class="tile" onclick="selectEditTool(this, 'crop')">Crop</button>
+                <button class="tile" onclick="selectEditTool(this, 'flip')">Flip</button>
+                <button class="tile" onclick="selectEditTool(this, 'rotate')">Rotate</button>
+                <button class="tile" onclick="selectEditTool(this, 'resize')">Resize</button>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="aboutSection" class="tool" style="display: none;">
+            <h2>About ImagePRO</h2>
+            <p>ImagePRO is a versatile and easy-to-use file conversion website that allows users to convert various image
+                formats with a simple and intuitive interface. Whether you need to convert images to PDFs or switch
+                between PNG and JPEG, ImagePRO offers a variety of options to meet your needs.</p>
+            <p>Our goal is to provide users with a quick, seamless experience for file conversions. The tool was built
+                as a group project by Laliteshwar Garg and Mansi, two final-year students in Computer Science, as part
+                of their academic curriculum.</p>
+            <p>ImagePRO features a simple and easy-to-use interface, ensuring a seamless experience for users of all
+                technical levels. Just select your desired conversion format, upload your image, and let ImagePRO handle
+                the rest.</p>
+            <p>In our next update, we're excited to introduce powerful new features, including an advanced image
+                editor for fine-tuning your visuals and a video-to-audio converter. </p>
+            <p>If you have any questions or issues, feel free to contact us:</p>
+            <p>Email: help247convert@gmail.com</p>
+            <p>Phone: 34223-222-2323</p>
+            <p>Office: Summerhill, Shimla, Himachal Pradesh, India</p>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contactSection" class="tool" style="display: none;">
+            <h2>Contact Us</h2>
+            <p>If you have any questions or issues, feel free to contact us:</p>
+            <p>Email: help247convert@gmail.com</p>
+            <p>Phone: 34223-222-2323</p>
+            <p>Office: Summerhill, Shimla, Himachal Pradesh, India</p>
+        </section>
+    </div>
+
+    <footer>
+        &copy; 2024 ImagePRO. All rights reserved.
+    </footer>
+    <script src="script.js"></script>
+</body>
+
+</html>
